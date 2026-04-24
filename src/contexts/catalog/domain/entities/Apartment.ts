@@ -9,10 +9,16 @@ export class Apartment {
   ) {}
 
   public activate(): void {
+    if (this.isVisible) {
+      return;
+    }
     this.isVisible = true;
   }
 
   public deactivate(): void {
+    if (!this.isVisible) {
+      return;
+    }
     this.isVisible = false;
   }
 

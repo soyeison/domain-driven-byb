@@ -16,10 +16,18 @@ export class Tower {
   ) {}
 
   public activate(): void {
+    if (this.isVisible) {
+      return;
+    }
+
     this.isVisible = true;
   }
 
   public deactivate(): void {
+    if (!this.isVisible) {
+      return;
+    }
+
     this.isVisible = false;
   }
 
@@ -33,16 +41,27 @@ export class Tower {
   }
 
   public activeApartment(apartmentId: string): void {
-    if (!this.isVisible) {
-      throw new Error(
-        'Cannot activate apartment in a tower that is not active.',
-      );
-    }
-
     const apartment = this.apartments.find((a) => a.id === apartmentId);
     if (!apartment) throw new Error('Apartment not found in tower.');
 
     apartment.activate();
+  }
+
+  public deactivateApartment(apartmentId: string): void {
+    const apartment = this.apartments.find((a) => a.id === apartmentId);
+    if (!apartment)
+      throw new Error(`Apartment not found in tower ${this.name}.`);
+
+    apartment.deactivate();
+  }
+
+  public isApartmentActive(apartmentId: string): boolean {
+    const apartment = this.apartments.find((a) => a.id === apartmentId);
+    if (!apartment) {
+      throw new Error(`Apartment not found in tower ${this.name}.`);
+    }
+
+    return apartment.isActive();
   }
 
   // --- Gestión de Parqueaderos ---
@@ -60,7 +79,8 @@ export class Tower {
       throw new Error('Cannot activate parking space: Tower is inactive.');
     }
     const space = this.parkingSpaces.find((p) => p.id === parkingSpaceId);
-    if (!space) throw new Error('Parking space not found.');
+    if (!space)
+      throw new Error(`Parking space not found in tower ${this.name}.`);
     space.activate();
   }
 
@@ -69,7 +89,7 @@ export class Tower {
       throw new Error('Cannot activate storage unit: Tower is inactive.');
     }
     const unit = this.storageUnits.find((s) => s.id === storageUnitId);
-    if (!unit) throw new Error('Storage unit not found.');
+    if (!unit) throw new Error(`Storage unit not found in tower ${this.name}.`);
     unit.activate();
   }
 }
