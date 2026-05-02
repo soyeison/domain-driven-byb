@@ -1,8 +1,11 @@
 import { Apartment } from '../entities/Apartment';
 import { Tower } from '../entities/Tower';
 import { Typology } from '../entities/Typology';
+import { BrandIdentity } from '../value-objects/BrandIdentity';
 import { CmsAsset } from '../value-objects/CmsAsset';
 import { ErpReference, ErpSystem } from '../value-objects/ErpReference';
+import { Location } from '../value-objects/Location';
+import { UrlSlug } from '../value-objects/UrlSlug';
 
 export enum ProjectStatus {
   LAUNCH = 'LAUNCH',
@@ -13,20 +16,63 @@ export enum ProjectStatus {
 
 export class Project {
   private readonly id: string;
+  private name: string;
+  private description: string | null = null;
   private erpReferences: ErpReference[] = [];
   private status: ProjectStatus;
   private cmsAssets: CmsAsset[] = [];
   private towers: Tower[] = [];
   private typologies: Typology[] = [];
+  private brandIdentity: BrandIdentity | null = null;
+  private location: Location | null = null;
+  private slug: UrlSlug | null = null;
 
   constructor(id: string, name: string) {
     this.id = id;
+    this.name = name;
     this.status = ProjectStatus.LAUNCH;
   }
 
   public getId(): string {
     return this.id;
   }
+
+  public updateGeneralInformation(name: string, description: string): void {
+    if (name.trim().length === 0) {
+      throw new Error('Project name cannot be empty.');
+    }
+
+    this.name = name;
+    this.description = description;
+  }
+
+  public updateSlug(newSlug: UrlSlug): void {
+    const isAlreadyUsed = this.status === ProjectStatus.ACTIVE;
+    const hasExistingSlug = this.slug !== null;
+
+    if (
+      isAlreadyUsed &&
+      hasExistingSlug &&
+      this.slug!.value !== newSlug.value
+    ) {
+      throw new Error(
+        'Cannot change the URL slug of an ACTIVE project. ' +
+          'Deactivate the project first if you are sure you want to break existing public links.',
+      );
+    }
+
+    this.slug = newSlug;
+  }
+
+  public updateBrandIdentity(brandIdentity: BrandIdentity): void {
+    this.brandIdentity = brandIdentity;
+  }
+
+  public updateLocation(location: Location): void {
+    this.location = location;
+  }
+
+  // Gestión de ERP
 
   public linkToErp(erpReference: ErpReference): void {
     const alreadyLinked = this.erpReferences.find(
@@ -43,6 +89,14 @@ export class Project {
   }
 
   public addCmsContent(asset: CmsAsset): void {
+    if (asset.type === 'MAIN_IMAGE') {
+      const hasMainImage = this.cmsAssets.some((a) => a.type === 'MAIN_IMAGE');
+      if (hasMainImage) {
+        throw new Error(
+          'Project already has a main image. Only one main image is allowed.',
+        );
+      }
+    }
     this.cmsAssets.push(asset);
   }
 
@@ -51,9 +105,15 @@ export class Project {
       return;
     }
 
-    if (this.cmsAssets.length === 0) {
-      throw new Error('Cannot activate project without CMS content.');
+    const hasMainImage = this.cmsAssets.some(
+      (asset) => asset.type === 'MAIN_IMAGE',
+    );
+    if (!hasMainImage) {
+      throw new Error(
+        'Cannot activate project: A MAIN_IMAGE is strictly required.',
+      );
     }
+
     if (this.erpReferences.length === 0) {
       throw new Error('Cannot activate project without linking to ERP system.');
     }

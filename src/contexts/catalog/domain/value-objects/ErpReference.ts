@@ -4,6 +4,7 @@ export class ErpReference {
   constructor(
     public readonly system: ErpSystem,
     public readonly externalId: string,
+    public readonly originalName: string,
   ) {}
 
   public equals(other: ErpReference): boolean {

@@ -14,7 +14,11 @@ describe('Project Aggregate - Domain Logic', () => {
       const project = new Project('p-1', 'Proyecto Alpha');
 
       // Act
-      const erpReference = new ErpReference('SINCO', 'S-12345');
+      const erpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(erpReference);
 
       // Assert
@@ -26,8 +30,16 @@ describe('Project Aggregate - Domain Logic', () => {
       const project = new Project('p-1', 'Proyecto Alpha');
 
       // Act
-      const erpReference1 = new ErpReference('SINCO', 'S-12345');
-      const erpReference2 = new ErpReference('SINCO', 'S-67890');
+      const erpReference1 = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
+      const erpReference2 = new ErpReference(
+        'SINCO',
+        'S-67890',
+        'Proyecto Alpha Copia',
+      );
       project.linkToErp(erpReference1);
 
       // Assert
@@ -41,8 +53,16 @@ describe('Project Aggregate - Domain Logic', () => {
       const project = new Project('p-1', 'Proyecto Alpha');
 
       // Act
-      const erpReference1 = new ErpReference('SINCO', 'S-12345');
-      const erpReference2 = new ErpReference('NOVA', 'N-54321');
+      const erpReference1 = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
+      const erpReference2 = new ErpReference(
+        'NOVA',
+        'N-54321',
+        'Proyecto Alpha Copia',
+      );
       project.linkToErp(erpReference1);
       project.linkToErp(erpReference2);
 
@@ -65,12 +85,16 @@ describe('Project Aggregate - Domain Logic', () => {
       const project = new Project('p-1', 'Proyecto Alpha');
 
       // Act
-      const erpReference = new ErpReference('SINCO', 'S-12345');
+      const erpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(erpReference);
 
       // Assert
       assert.throws(() => project.activate(), {
-        message: 'Cannot activate project without CMS content.',
+        message: 'Cannot activate project: A MAIN_IMAGE is strictly required.',
       });
     });
 
@@ -80,7 +104,11 @@ describe('Project Aggregate - Domain Logic', () => {
 
       // Act
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
 
       // Assert
@@ -92,10 +120,18 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should activate successfully when all conditions are met', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const erpReference = new ErpReference('SINCO', 'S-12345');
+      const erpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(erpReference);
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
 
       // Act
@@ -108,10 +144,18 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should deactivate a project successfully', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const erpReference = new ErpReference('SINCO', 'S-12345');
+      const erpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(erpReference);
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
       project.activate();
 
@@ -125,10 +169,18 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should deactivate an already inactive project (idempotency)', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const erpReference = new ErpReference('SINCO', 'S-12345');
+      const erpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(erpReference);
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
       project.activate();
       project.deactivate();
@@ -143,10 +195,18 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should activate an already active project', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const erpReference = new ErpReference('SINCO', 'S-12345');
+      const erpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(erpReference);
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
       project.activate();
 
@@ -164,9 +224,17 @@ describe('Project Aggregate - Domain Logic', () => {
       const project = new Project('p-1', 'Proyecto Alpha');
 
       // Act
-      const erpReference = new ErpReference('SINCO', 'S-12345');
+      const erpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(erpReference);
-      const towerReference = new ErpReference('SINCO', 'S-12345');
+      const towerReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Torre Central',
+      );
       const validTower = new Tower('t-1', towerReference, 'Torre Central');
       project.addTower(validTower);
 
@@ -177,11 +245,15 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should reject a tower if the project is not linked to that towers ERP system', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const erpReference = new ErpReference('SINCO', 'S-12345');
+      const erpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(erpReference);
 
       // Act
-      const novaReference = new ErpReference('NOVA', 'N-54321');
+      const novaReference = new ErpReference('NOVA', 'N-54321', 'Torre Nova');
       const invalidTower = new Tower('t-1', novaReference, 'Torre Nova');
 
       // Assert
@@ -194,14 +266,26 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should activate a tower if the project is activated', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const erpReference = new ErpReference('SINCO', 'S-12345');
+      const erpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(erpReference);
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
       project.activate();
 
-      const towerReference = new ErpReference('SINCO', 'S-12345');
+      const towerReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Torre Central',
+      );
       const validTower = new Tower('t-1', towerReference, 'Torre Central');
       project.addTower(validTower);
     });
@@ -209,9 +293,17 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should activate a tower in an inactive project', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const erpReference = new ErpReference('SINCO', 'S-12345');
+      const erpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(erpReference);
-      const towerReference = new ErpReference('SINCO', 'S-12345');
+      const towerReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Torre Central',
+      );
       const validTower = new Tower('t-1', towerReference, 'Torre Central');
       project.addTower(validTower);
 
@@ -223,10 +315,18 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should throw an error if trying to activate a non-existent tower', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const erpReference = new ErpReference('SINCO', 'S-12345');
+      const erpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(erpReference);
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
       project.activate();
 
@@ -239,13 +339,25 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should activate a tower successfully when all conditions are met', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const erpReference = new ErpReference('SINCO', 'S-12345');
+      const erpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(erpReference);
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
       project.activate();
-      const towerReference = new ErpReference('SINCO', 'S-12345');
+      const towerReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Torre Central',
+      );
       const validTower = new Tower('t-1', towerReference, 'Torre Central');
       project.addTower(validTower);
 
@@ -259,13 +371,25 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should activate an already active tower', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const erpReference = new ErpReference('SINCO', 'S-12345');
+      const erpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(erpReference);
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
       project.activate();
-      const towerReference = new ErpReference('SINCO', 'S-12345');
+      const towerReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Torre Central',
+      );
       const validTower = new Tower('t-1', towerReference, 'Torre Central');
       project.addTower(validTower);
       project.activateTower('t-1');
@@ -280,13 +404,25 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should deactivate an active tower', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const erpReference = new ErpReference('SINCO', 'S-12345');
+      const erpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(erpReference);
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
       project.activate();
-      const towerReference = new ErpReference('SINCO', 'S-12345');
+      const towerReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Torre Central',
+      );
       const validTower = new Tower('t-1', towerReference, 'Torre Central');
       project.addTower(validTower);
       project.activateTower('t-1');
@@ -301,13 +437,25 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should deactivate an already inactive tower', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const erpReference = new ErpReference('SINCO', 'S-12345');
+      const erpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(erpReference);
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
       project.activate();
-      const towerReference = new ErpReference('SINCO', 'S-12345');
+      const towerReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Torre Central',
+      );
       const validTower = new Tower('t-1', towerReference, 'Torre Central');
       project.addTower(validTower);
       project.activateTower('t-1');
@@ -325,10 +473,18 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should activate an apartment in an inactive project', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const projectErpReference = new ErpReference('SINCO', 'S-12345');
+      const projectErpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(projectErpReference);
 
-      const towerReference = new ErpReference('SINCO', 'S-12345');
+      const towerReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Torre Central',
+      );
       const tower = new Tower('t-1', towerReference, 'Torre Central');
       project.addTower(tower);
 
@@ -350,10 +506,18 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should throw an error if trying to activate an apartment in a non-existent tower', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const projectErpReference = new ErpReference('SINCO', 'S-12345');
+      const projectErpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(projectErpReference);
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
       project.activate();
 
@@ -369,14 +533,26 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should throw an error if trying to activate a non-existent apartment', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const projectErpReference = new ErpReference('SINCO', 'S-12345');
+      const projectErpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(projectErpReference);
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
       project.activate();
 
-      const towerReference = new ErpReference('SINCO', 'S-12345');
+      const towerReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Torre Central',
+      );
       const tower = new Tower('t-1', towerReference, 'Torre Central');
       project.addTower(tower);
       project.activateTower('t-1');
@@ -393,13 +569,25 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should activate an apartment successfully when all conditions are met', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const projectErpReference = new ErpReference('SINCO', 'S-12345');
+      const projectErpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(projectErpReference);
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
       project.activate();
-      const towerReference = new ErpReference('SINCO', 'S-12345');
+      const towerReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Torre Central',
+      );
       const tower = new Tower('t-1', towerReference, 'Torre Central');
       project.addTower(tower);
       project.activateTower('t-1');
@@ -415,13 +603,25 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should deactivate an active apartment', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const projectErpReference = new ErpReference('SINCO', 'S-12345');
+      const projectErpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(projectErpReference);
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
       project.activate();
-      const towerReference = new ErpReference('SINCO', 'S-12345');
+      const towerReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Torre Central',
+      );
       const tower = new Tower('t-1', towerReference, 'Torre Central');
       project.addTower(tower);
       project.activateTower('t-1');
@@ -444,13 +644,25 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should deactivate an already inactive apartment', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const projectErpReference = new ErpReference('SINCO', 'S-12345');
+      const projectErpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(projectErpReference);
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
       project.activate();
-      const towerReference = new ErpReference('SINCO', 'S-12345');
+      const towerReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Torre Central',
+      );
       const tower = new Tower('t-1', towerReference, 'Torre Central');
       project.addTower(tower);
       project.activateTower('t-1');
@@ -474,13 +686,25 @@ describe('Project Aggregate - Domain Logic', () => {
     it('Should activate an already active apartment', () => {
       // Arrange
       const project = new Project('p-1', 'Proyecto Alpha');
-      const projectErpReference = new ErpReference('SINCO', 'S-12345');
+      const projectErpReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Proyecto Alpha Original',
+      );
       project.linkToErp(projectErpReference);
       project.addCmsContent(
-        new CmsAsset('image', 'http://example.com/image.jpg'),
+        new CmsAsset(
+          'MAIN_IMAGE',
+          'http://example.com/image.jpg',
+          'Main project image',
+        ),
       );
       project.activate();
-      const towerReference = new ErpReference('SINCO', 'S-12345');
+      const towerReference = new ErpReference(
+        'SINCO',
+        'S-12345',
+        'Torre Central',
+      );
       const tower = new Tower('t-1', towerReference, 'Torre Central');
       project.addTower(tower);
       project.activateTower('t-1');
